@@ -9,7 +9,7 @@ import { prisma, steamWebApi } from '../main';
 
 export default {
   data: new SlashCommandBuilder()
-    .setName('top')
+    .setName('bonk')
     .setDescription('Gets the top 10 players.'),
   async execute(interaction: CommandInteraction) {
     await interaction.deferReply();
@@ -52,7 +52,7 @@ async function cmdCallback(): Promise<WebhookMessageOptions | string> {
   const fields = res1.map((e, i) => {
     let nb = `🪙 ${i + 1}th`;
     if (i === 0) {
-      nb = '🥔 1st';
+      nb = '🥇 1st';
     } else if (i === 1) {
       nb = '🥈 2nd';
     } else if (i === 2) {
