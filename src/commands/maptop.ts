@@ -5,8 +5,7 @@ import {
   WebhookMessageOptions,
 } from 'discord.js';
 
-import { prisma, MAPS_IMAGES_URL } from '../main';
-import { prisma, steamWebApi } from '../main';
+import { prisma, MAPS_IMAGES_URL, steamWebApi } from '../main';
 
 export default {
   data: new SlashCommandBuilder()
@@ -44,7 +43,7 @@ async function cmdCallback(
     skip: 0,
     take: 10,
     select: {
-      steamid64: true,
+      steamid: true,
       name: true,
       runtimepro: true
     },
@@ -54,7 +53,7 @@ async function cmdCallback(
   }
 
   const playerInfo = await steamWebApi.usersApi.getPlayerSummaries([
-    res1[0].steamid64,
+    res1[0].steamid,
   ]);
   const avatarfull: string =
     playerInfo.response.players.length > 0
@@ -86,13 +85,14 @@ async function cmdCallback(
      }
     return {
        name: nb,
-      value: `[${e.name}](http://steamcommunity.com/profiles/${e.steamid64}) **${e.runtimepro}**`,
+      value: `[${e.name}](http://steamcommunity.com/profiles/${e.steamid}) **${e.runtimepro}**`,
       inline: true,
     };
   });
 
   const embed = new MessageEmbed()
     .setTitle(`📈 __Map Top 10__ 📈`)
+    .setThumbnail(avatarfull)
     .setImage(`${MAPS_IMAGES_URL}/${mapname}.jpg`)
     .addFields([
       {
