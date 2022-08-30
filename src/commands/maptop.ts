@@ -46,8 +46,7 @@ async function cmdCallback(
     select: {
       steamid64: true,
       name: true,
-      runtimepro: true,
-      date: true,
+      runtimepro: true
     },
   });
   if (!res1) {
@@ -87,7 +86,7 @@ async function cmdCallback(
      }
     return {
        name: nb,
-      value: `[${e.name}](http://steamcommunity.com/profiles/${e.steamid64}) **${e.points}** _pts_`,
+      value: `[${e.name}](http://steamcommunity.com/profiles/${e.steamid64}) **${e.runtimepro}**`,
       inline: true,
     };
   });
@@ -99,11 +98,6 @@ async function cmdCallback(
       {
         name: 'Map',
         value: mapname,
-        inline: true,
-      },
-      {
-        name: 'Tier',
-        value: tier.toString(),
         inline: true,
       }
     ],fields);
