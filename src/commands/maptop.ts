@@ -6,7 +6,7 @@ import {
 } from 'discord.js';
 
 import { prisma, MAPS_IMAGES_URL } from '../main';
-import { toMMSS } from '../utils/toMMSS';
+import { prisma, steamWebApi } from '../main';
 
 export default {
   data: new SlashCommandBuilder()
@@ -34,7 +34,7 @@ async function cmdCallback(
   interaction: CommandInteraction,
 ): Promise<WebhookMessageOptions | string> {
   const mapname = interaction.options.getString('mapname').toLowerCase();
-  const res1 = await prisma.ck_playertimes.findUnique({
+  const res1 = await prisma.ck_playertimes.findMany({
     where: {
       mapname: mapname,
     },
