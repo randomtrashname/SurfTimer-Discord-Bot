@@ -24,7 +24,7 @@ const commands = new Map<string, SlashCommand>();
 
 console.log('Reading commands...');
 readdirSync(join(__dirname, 'commands')).forEach((file) => {
-  if (!file.endsWith('.ts')) {
+  if (!file.endsWith('.js')) {
     return;
   }
   try {
