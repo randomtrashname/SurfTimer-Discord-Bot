@@ -1,6 +1,7 @@
-import { Client, Intents } from 'discord.js';
+import { Client, GatewayIntentBits } from 'discord.js';
 import { readdirSync } from 'fs';
 import { PrismaClient } from '@prisma/client';
+
 import * as dotenv from 'dotenv';
 import { SteamWebApi } from '@j4ckofalltrades/steam-webapi-ts';
 import { join } from 'path';
@@ -9,7 +10,11 @@ import { regCommands } from './deploy-commands';
 import { SlashCommand } from './types';
 import { api } from './api/builder';
 
-dotenv.config();
+// Disable on the heroku dings
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+  dotenv.config();
+}
 
 export const steamWebApi = new SteamWebApi(process.env.STEAM_API_KEY);
 
@@ -18,7 +23,7 @@ export const prisma = new PrismaClient();
 export const MAPS_IMAGES_URL =
   'https://raw.githubusercontent.com/Sayt123/SurfMapPics/Maps-and-bonuses/csgo/';
 
-export const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+export const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 const commands = new Map<string, SlashCommand>();
 
@@ -68,6 +73,6 @@ client.on('interactionCreate', async (interaction) => {
 // Login to Discord with your client's token
 client.login(process.env.TOKEN);
 
-api.listen(3000, () => {
-  console.log(`API is listening on port 3000`);
+api.listen(process.env.PORT || 3000, () => {
+  console.log(`API is listening on port ${process.env.PORT || 3000}`);
 });

@@ -6,7 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "importHelpers": true,
-    "alwaysStrict": true,
+    "alwaysStrict": false,
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
@@ -15,9 +15,12 @@
     "noUnusedParameters": true,
     "noImplicitAny": false,
     "noImplicitThis": false,
-    "strictNullChecks": false,
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    // In case discord.js decides to ruin the build again
+    "skipLibCheck": true,
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }

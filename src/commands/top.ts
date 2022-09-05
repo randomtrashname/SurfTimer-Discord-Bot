@@ -1,11 +1,14 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { countryToAlpha2 } from 'country-to-iso';
 import {
   CommandInteraction,
-  MessageEmbed,
+  EmbedBuilder,
   WebhookMessageOptions,
 } from 'discord.js';
 
 import { prisma, steamWebApi } from '../main';
+
+import flag from 'country-code-emoji';
 
 export default {
   data: new SlashCommandBuilder()
@@ -30,6 +33,9 @@ async function cmdCallback(): Promise<WebhookMessageOptions | string> {
     },
     skip: 0,
     take: 10,
+    where: {
+      style: 0
+    },
     select: {
       steamid64: true,
       name: true,
@@ -52,7 +58,7 @@ async function cmdCallback(): Promise<WebhookMessageOptions | string> {
   const fields = res1.map((e, i) => {
     let nb = `🪙 ${i + 1}th`;
     if (i === 0) {
-      nb = '🥔 1st';
+      nb = '🥇 1st';
     } else if (i === 1) {
       nb = '🥈 2nd';
     } else if (i === 2) {
@@ -60,12 +66,12 @@ async function cmdCallback(): Promise<WebhookMessageOptions | string> {
     }
     return {
       name: nb,
-      value: `[${e.name}](http://steamcommunity.com/profiles/${e.steamid64}) **${e.points}** _pts_`,
+      value: `${flag(countryToAlpha2(e.country).toLowerCase())} [${e.name}](http://steamcommunity.com/profiles/${e.steamid64})\n **${e.points}** _pts_`,
       inline: true,
     };
   });
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setTitle(`🏆 __Top players__ 🏆`)
     .setThumbnail(avatarfull)
     .addFields(fields);

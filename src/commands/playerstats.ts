@@ -1,11 +1,13 @@
 ﻿import { SlashCommandBuilder } from '@discordjs/builders';
+import { countryToAlpha2 } from 'country-to-iso';
 import {
   CommandInteraction,
-  MessageEmbed,
+  EmbedBuilder,
   WebhookMessageOptions,
 } from 'discord.js';
 import { prisma, steamWebApi } from '../main';
 import { convertToSteam64 } from '../utils/convertToSteam64';
+import flag from 'country-code-emoji';
 
 export default {
   data: new SlashCommandBuilder()
@@ -34,7 +36,7 @@ export default {
 async function cmdCallback(
   interaction: CommandInteraction,
 ): Promise<WebhookMessageOptions | string> {
-  const playerID = interaction.options.getString('playerid');
+  const playerID = interaction.options.get('playerid').value!.toString().toLowerCase();
   const steamID64 = await convertToSteam64(playerID, process.env.STEAM_API_KEY);
   if (steamID64 === undefined) {
     return 'Incorrect playerID.';
@@ -53,12 +55,15 @@ async function cmdCallback(
     select: {
       points: true,
       steamid: true,
+      country: true,
     },
   });
 
   const personaname = player.personaname;
   const avatarfull = player.avatarfull;
   const profileurl = player.profileurl;
+  const country = res1.country
+  const country_flag = flag(countryToAlpha2(country));
 
   if (!res1) {
     return `${personaname} not found in the SurfTimer database.`;
@@ -96,20 +101,27 @@ async function cmdCallback(
 
   const totalBonusesQuery: number =
     await prisma.$queryRaw`SELECT DISTINCT COUNT(zonename) as "nb" FROM ck_zones WHERE zonegroup>0`;
-  const totalBonuses: number = totalBonusesQuery[0]['nb'];
+
+  // explicit type cast; retrieves the value as Bigint without this.
+  const totalBonuses: number = Number(totalBonusesQuery[0]['nb']);
 
   const percentMaps = Math.round(
-    (finishedMaps / (totalMaps ? totalMaps : 1)) * 100,
+    (finishedMaps / (totalMaps ?? 1)) * 100,
   );
 
   const percentBonuses = Math.round(
-    (finishedBonuses / (totalBonuses ? totalBonuses : 1)) * 100,
+    (finishedBonuses / (totalBonuses ?? 1)) * 100,
   );
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setTitle(`📈 __Player statistics__ 📈`)
     .setThumbnail(avatarfull)
     .addFields([
+      {
+        name: 'Country',
+        value: `${country_flag} ${country}`,
+        inline: true,
+      },
       {
         name: 'Player',
         value: `[${personaname}](${profileurl})`,

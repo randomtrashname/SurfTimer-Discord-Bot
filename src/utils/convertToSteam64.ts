@@ -36,7 +36,7 @@ export async function convertToSteam64(
   try {
     let sid = new SteamID(input);
     return sid.getSteamID64();
-  } catch (e) {}
+  } catch (e) { }
 
   // Try to extrapolate steamid64 by looking in the database.
   const res = await prisma.ck_playerrank.findFirst({
@@ -49,7 +49,8 @@ export async function convertToSteam64(
       steamid64: true,
     },
   });
-  if (res !== undefined) {
+  if (res !== undefined && res !== null) {
+    console.log(res)
     return res.steamid64;
   }
   return undefined;

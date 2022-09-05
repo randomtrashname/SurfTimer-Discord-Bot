@@ -78,6 +78,8 @@ void sendRecordToApi(const char[] steamID64, int style, const char[] time, const
   data.SetInt("bonusGroup", bonusGroup);
   data.SetInt("style", style);
 
+  PrintToServer("Sending POST to http://%s:%s/record...", g_szApiHost, g_szApiPort);
+
   char szRequestBuffer[1024];
   Format(szRequestBuffer, sizeof szRequestBuffer, "http://%s:%s/record", g_szApiHost, g_szApiPort);
   connection = new HTTPRequest(szRequestBuffer);
@@ -115,15 +117,10 @@ stock void RemoveWorkshop(char[] szMapName, int len)
 
 void onRecordSent(HTTPResponse response, int client)
 {
-	#if defined DEBUGGING
+	if (response.Status != HTTPStatus_Created)
 	{
-		PrintToServer("Processed API POST, status %d", response.Status);
-		if (response.Status != HTTPStatus_Created)
-		{
-			PrintToServer("An error has occured while sending the API POST.");
-			return;
-		}
-		PrintToServer("The API POST has been sent successfuly.");
+		PrintToServer("(%s) - An error has occured while sending the API POST.", response.Status);
+		return;
 	}
-  #endif
+	PrintToServer("(%s) - The API POST has been sent successfuly.", response.Status);
 }

@@ -1,7 +1,7 @@
 ﻿import { SlashCommandBuilder } from '@discordjs/builders';
 import {
   CommandInteraction,
-  MessageEmbed,
+  EmbedBuilder,
   WebhookMessageOptions,
 } from 'discord.js';
 
@@ -25,7 +25,7 @@ export default {
       await interaction.editReply(reply);
     } catch (err) {
       console.error(err);
-      await interaction.editReply('An internal error occured.');
+      await interaction.editReply('Unable to find given map.');
     }
   },
 };
@@ -33,7 +33,7 @@ export default {
 async function cmdCallback(
   interaction: CommandInteraction,
 ): Promise<WebhookMessageOptions | string> {
-  const mapname = interaction.options.getString('mapname').toLowerCase();
+  const mapname = interaction.options.get('mapname').value!.toString().toLowerCase();
   const res1 = await prisma.ck_maptier.findUnique({
     where: {
       mapname: mapname,
@@ -117,7 +117,7 @@ async function cmdCallback(
     },
   });
 
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setTitle(`📈 __Map statistics__ 📈`)
     .setImage(`${MAPS_IMAGES_URL}/${mapname}.jpg`)
     .addFields([

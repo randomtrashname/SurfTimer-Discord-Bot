@@ -1,6 +1,6 @@
 {
   "name": "surftimer-discord-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Discord bot for the SurfTimer plugin for CS:GO.",
   "main": "./dist/main.js",
   "scripts": {
@@ -17,26 +17,29 @@
   "author": "Sarrus",
   "license": "MIT",
   "dependencies": {
-    "@discordjs/builders": "^0.11.0",
-    "@discordjs/opus": "^0.7.0",
-    "@discordjs/rest": "^0.2.0-canary.0",
-    "@j4ckofalltrades/steam-webapi-ts": "^1.0.1",
-    "axios": "^0.25.0",
-    "discord-api-types": "^0.26.1",
-    "discord.js": "^13.6.0",
-    "dotenv": "^14.2.0",
+    "@discordjs/builders": "^1.2.0",
+    "@discordjs/opus": "^0.8.0",
+    "@discordjs/rest": "^1.1.0",
+    "@j4ckofalltrades/steam-webapi-ts": "^1.0.4",
+    "@prisma/client": "^4.3.1",
+    "axios": "^0.27.2",
+    "country-code-emoji": "^2.3.0",
+    "country-to-iso": "^1.3.0",
+    "discord-api-types": "^0.37.5",
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.2",
     "express": "^4.18.1",
     "node-html-to-image": "^3.2.4",
     "steamid": "^2.0.0",
     "steamid-resolver": "^1.2.2"
   },
   "devDependencies": {
-    "@prisma/client": "^3.8.1",
     "@types/express": "^4.17.13",
     "@types/node": "16.11.19",
-    "prisma": "^3.8.1",
+    "prisma": "^4.3.1",
     "ts-loader": "^9.2.6",
     "ts-node": "10.4.0",
+    "tslib": "^2.4.0",
     "typescript": "^4.5.4"
   }
 }

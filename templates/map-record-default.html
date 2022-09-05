@@ -1,115 +1,115 @@
 <html>
-  <head>
-    <link
-      href="http://fonts.cdnfonts.com/css/oxidesolidweb-boldw03-rg"
-      rel="stylesheet"
-    />
 
-    <style>
-      @import url('http://fonts.cdnfonts.com/css/oxidesolidweb-boldw03-rg');
+<head>
+  <link href="http://fonts.cdnfonts.com/css/oxidesolidweb-boldw03-rg" rel="stylesheet" />
 
-      body {
-        width: 1720px;
-        height: 720px;
-        margin: 0;
-        padding: 0;
-        background-image: url('https://github.com/Sayt123/SurfMapPics/blob/Maps-and-bonuses/csgo/{{ mapName }}.jpg?raw=true');
-        background-repeat: no-repeat;
-        background-size: 1720px 720px;
-        backdrop-filter: blur(5px);
-      }
+  <style>
+    @import url('http://fonts.cdnfonts.com/css/oxidesolidweb-boldw03-rg');
 
-      #player {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-      }
+    body {
+      width: 1720px;
+      height: 720px;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://github.com/Sayt123/SurfMapPics/blob/Maps-and-bonuses/csgo/{{ mapName }}.jpg?raw=true');
+      background-repeat: no-repeat;
+      background-size: 1720px 720px;
+      backdrop-filter: blur(5px);
+    }
 
-      #player img {
-        margin-right: 5rem;
-        border-radius: 50%;
-        border: 0.5rem solid cyan;
-        width: 300px;
-        height: 300px;
-      }
+    #player {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
 
-      #player span {
-        color: white;
-        font-size: 5rem;
-        font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
-        -webkit-text-stroke: 2px black;
-      }
+    #player img {
+      margin-right: 5rem;
+      border-radius: 50%;
+      border: 0.5rem solid cyan;
+      width: 300px;
+      height: 300px;
+    }
 
-      #announcement {
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        margin-bottom: 0;
-      }
+    #player span {
+      color: white;
+      font-size: 5rem;
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      -webkit-text-stroke: 2px black;
+    }
 
-      #announcement #type {
-        margin-top: 0.5rem;
-        color: white;
-        font-size: 5rem;
-        font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
-        margin-bottom: 0;
-        -webkit-text-stroke: 2px black;
-      }
+    #announcement {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      margin-bottom: 0;
+    }
 
-      #announcement #mapname {
-        margin-top: 0.5rem;
-        color: white;
-        font-size: 5rem;
-        font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
-        margin-bottom: 0;
-        -webkit-text-stroke: 2px black;
-      }
+    #announcement #type {
+      margin-top: 0.5rem;
+      color: white;
+      font-size: 5rem;
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      margin-bottom: 0;
+      -webkit-text-stroke: 2px black;
+    }
 
-      #times {
-        display: flex;
-        flex-direction: row;
-        margin-top: 2rem;
-        margin-bottom: 0;
-        text-align: center;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        margin-left: 20%;
-        margin-right: 20%;
-      }
+    #announcement #mapname {
+      margin-top: 0.5rem;
+      color: white;
+      font-size: 5rem;
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      margin-bottom: 0;
+      -webkit-text-stroke: 2px black;
+    }
 
-      #times #new-time {
-        color: white;
-        font-size: 5rem;
-        font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
-        margin-bottom: 0;
-        margin-top: 0;
-        -webkit-text-stroke: 2px black;
-      }
+    #times {
+      display: flex;
+      flex-direction: row;
+      margin-top: 2rem;
+      margin-bottom: 0;
+      text-align: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-left: 20%;
+      margin-right: 20%;
+    }
 
-      #times #time-diff {
-        color: white;
-        font-size: 5rem;
-        font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
-        margin-bottom: 0;
-        margin-top: 0;
-        -webkit-text-stroke: 2px black;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="announcement">
-      <p id="type">New map record!</p>
-      <p id="type">({{ mapName }})</p>
-    </div>
+    #times #new-time {
+      color: white;
+      font-size: 5rem;
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      margin-bottom: 0;
+      margin-top: 0;
+      -webkit-text-stroke: 2px black;
+    }
 
-    <div id="player">
-      <img src="{{ avatar }}" />
-      <span class="caption">{{ playerName }}</span>
-    </div>
-    <div id="times">
-      <p id="new-time">{{ newTime }}</p>
-      <p id="time-diff">{{ timeDiff }}</p>
-    </div>
-  </body>
+    #times #time-diff {
+      color: white;
+      font-size: 5rem;
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      margin-bottom: 0;
+      margin-top: 0;
+      -webkit-text-stroke: 2px black;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="announcement">
+    <p id="type">New {{ style }}{{ mapType }} record!</p>
+    <p id="type">{{ mapName }}</p>
+  </div>
+
+  <div id="player">
+    <img src="{{ avatar }}" />
+    <span class="caption">{{ playerName }}</span>
+  </div>
+  <div id="times">
+    <p id="new-time">{{ newTime }}</p>
+    <p id="time-diff">{{ timeDiff }}</p>
+  </div>
+</body>
+
 </html>
