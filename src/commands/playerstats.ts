@@ -36,7 +36,7 @@ export default {
 async function cmdCallback(
   interaction: CommandInteraction,
 ): Promise<WebhookMessageOptions | string> {
-  const playerID = interaction.options.get('playerid').value!.toString().toLowerCase();
+  const playerID = interaction.options.get('playerid').value!.toString();
   const steamID64 = await convertToSteam64(playerID, process.env.STEAM_API_KEY);
   if (steamID64 === undefined) {
     return 'Incorrect playerID.';

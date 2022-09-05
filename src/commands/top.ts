@@ -66,7 +66,7 @@ async function cmdCallback(): Promise<WebhookMessageOptions | string> {
     }
     return {
       name: nb,
-      value: `${flag(countryToAlpha2(e.country).toLowerCase())} [${e.name}](http://steamcommunity.com/profiles/${e.steamid64})\n **${e.points}** _pts_`,
+      value: `${flag(countryToAlpha2(e.country))} [${e.name}](http://steamcommunity.com/profiles/${e.steamid64})\n **${e.points}** _pts_`,
       inline: true,
     };
   });

@@ -36,7 +36,7 @@ export default {
 async function cmdCallback(
   interaction: CommandInteraction,
 ): Promise<WebhookMessageOptions | string> {
-  const mapname = interaction.options.get('mapname').value.toString().toLowerCase();
+  const mapname = interaction.options.get('mapname').value.toString();
   const res1 = await prisma.ck_playertimes.findMany({
     where: {
       mapname: mapname,
