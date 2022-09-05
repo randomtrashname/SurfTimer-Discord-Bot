@@ -6,7 +6,7 @@
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "importHelpers": true,
-    "alwaysStrict": false,
+    "alwaysStrict": true,
     "sourceMap": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
