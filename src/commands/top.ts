@@ -10,6 +10,8 @@ import { prisma, steamWebApi } from '../main';
 
 import flag from 'country-code-emoji';
 
+const displayFlag = ['True', 'true', 't', '1'].includes(process.env.PLAYER_FLAGS);
+
 export default {
   data: new SlashCommandBuilder()
     .setName('top')
@@ -66,7 +68,7 @@ async function cmdCallback(): Promise<WebhookMessageOptions | string> {
     }
     return {
       name: nb,
-      value: `${flag(countryToAlpha2(e.country))} [${e.name}](http://steamcommunity.com/profiles/${e.steamid64})\n **${e.points}** _pts_`,
+      value: `${displayFlag ? flag(countryToAlpha2(e.country)) : ''} [${e.name}](http://steamcommunity.com/profiles/${e.steamid64})\n **${e.points}** _pts_`,
       inline: true,
     };
   });

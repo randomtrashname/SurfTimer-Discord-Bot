@@ -14,3 +14,5 @@ MAP_RECORD_CHANNEL_ID=869859765987607
 API_KEY=fGREZ78R98-fGREZ78R98-fGREZ78R98-fGREZ78R98-fGREZ78R98
 # Port
 PORT=3000
+# Display countries + flags of users. (Accepts 'True', 'true', 't' and '1' as the 'enabled' input)
+PLAYER_FLAGS=true

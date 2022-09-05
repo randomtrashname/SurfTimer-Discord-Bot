@@ -9,6 +9,8 @@ import { prisma, steamWebApi } from '../main';
 import { convertToSteam64 } from '../utils/convertToSteam64';
 import flag from 'country-code-emoji';
 
+const displayFlag = ['True', 'true', 't', '1'].includes(process.env.PLAYER_FLAGS);
+
 export default {
   data: new SlashCommandBuilder()
     .setName('playerstats')
@@ -113,33 +115,34 @@ async function cmdCallback(
     (finishedBonuses / (totalBonuses ?? 1)) * 100,
   );
 
+  const countryField = displayFlag ? [{
+    name: 'Country',
+    value: `${country_flag} ${country}`,
+    inline: true,
+  }] : []
+
+  const fields = [{
+    name: 'Player',
+    value: `[${personaname}](${profileurl})`,
+    inline: true,
+  },
+  {
+    name: 'Completed maps',
+    value: `${percentMaps}%`,
+    inline: true,
+  },
+  {
+    name: 'Completed bonuses',
+    value: `${percentBonuses}%`,
+    inline: true,
+  },
+  { name: 'Rank', value: `${rank + 1}/${totalNbPlayers}`, inline: true },
+  { name: 'Score', value: points.toString(), inline: true },];
+
   const embed = new EmbedBuilder()
     .setTitle(`📈 __Player statistics__ 📈`)
     .setThumbnail(avatarfull)
-    .addFields([
-      {
-        name: 'Country',
-        value: `${country_flag} ${country}`,
-        inline: true,
-      },
-      {
-        name: 'Player',
-        value: `[${personaname}](${profileurl})`,
-        inline: true,
-      },
-      {
-        name: 'Completed maps',
-        value: `${percentMaps}%`,
-        inline: true,
-      },
-      {
-        name: 'Completed bonuses',
-        value: `${percentBonuses}%`,
-        inline: true,
-      },
-      { name: 'Rank', value: `${rank + 1}/${totalNbPlayers}`, inline: true },
-      { name: 'Score', value: points.toString(), inline: true },
-    ]);
+    .addFields(displayFlag ? [...countryField, ...fields] : fields);
 
   return { embeds: [embed] };
 }

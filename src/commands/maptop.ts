@@ -11,6 +11,8 @@ import { prisma, MAPS_IMAGES_URL, steamWebApi } from '../main';
 import { countryToAlpha2 } from 'country-to-iso';
 import flag from 'country-code-emoji';
 
+const displayFlag = ['True', 'true', 't', '1'].includes(process.env.PLAYER_FLAGS);
+
 export default {
   data: new SlashCommandBuilder()
     .setName('maptop')
@@ -71,6 +73,7 @@ async function cmdCallback(
   const playerInfo = await steamWebApi.usersApi.getPlayerSummaries([
     res2[res2.findIndex((x) => x.steamid == res1[0].steamid)].steamid64,
   ]);
+
   const avatarfull: string =
     playerInfo.response.players.length > 0
       ? playerInfo.response.players[0]['avatarfull']
@@ -101,7 +104,7 @@ async function cmdCallback(
     }
     return {
       name: nb,
-      value: `${flag(countryToAlpha2(res2[res2.findIndex((x) => x.steamid == e.steamid)].country))} [${e.name}](http://steamcommunity.com/profiles/${e.steamid}) **${e.runtimepro}**`,
+      value: `${displayFlag ? flag(countryToAlpha2(res2[res2.findIndex((x) => x.steamid == e.steamid)].country)) : ''} [${e.name}](http://steamcommunity.com/profiles/${res2[res2.findIndex((x) => x.steamid == e.steamid)].steamid64}) **${e.runtimepro}**`,
       inline: true,
     };
   });
