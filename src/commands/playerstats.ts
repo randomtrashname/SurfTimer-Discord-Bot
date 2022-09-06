@@ -142,7 +142,7 @@ async function cmdCallback(
   const embed = new EmbedBuilder()
     .setTitle(`📈 __Player statistics__ 📈`)
     .setThumbnail(avatarfull)
-    .addFields(displayFlag ? [...countryField, ...fields] : fields);
+    .addFields(displayFlag && country != 'Unknown' ? [...countryField, ...fields] : fields);
 
   return { embeds: [embed] };
 }

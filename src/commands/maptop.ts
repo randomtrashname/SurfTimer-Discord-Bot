@@ -104,7 +104,7 @@ async function cmdCallback(
     }
     return {
       name: nb,
-      value: `${displayFlag ? flag(countryToAlpha2(res2[res2.findIndex((x) => x.steamid == e.steamid)].country)) : ''} [${e.name}](http://steamcommunity.com/profiles/${res2[res2.findIndex((x) => x.steamid == e.steamid)].steamid64}) **${e.runtimepro}**`,
+      value: `${displayFlag && res2[res2.findIndex((x) => x.steamid == e.steamid)].country != 'Unknown' ? flag(countryToAlpha2(res2[res2.findIndex((x) => x.steamid == e.steamid)].country)) : ''} [${e.name}](http://steamcommunity.com/profiles/${res2[res2.findIndex((x) => x.steamid == e.steamid)].steamid64}) **${e.runtimepro}**`,
       inline: true,
     };
   });
