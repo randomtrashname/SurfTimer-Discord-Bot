@@ -12,7 +12,7 @@ public Plugin myinfo =
 	name        = "SurfTimer-Discord-Bot",
 	author      = "Sarrus",
 	description = "",
-	version     = "1.0.0",
+	version     = "1.0.1",
 	url         = "https://github.com/Sarrus1/SurfTimer-Discord-Bot"
 };
 
@@ -42,6 +42,7 @@ public void OnMapStart()
 {
 	GetCurrentMap(g_szCurrentMap, sizeof g_szCurrentMap);
 	RemoveWorkshop(g_szCurrentMap, sizeof g_szCurrentMap);
+	ClearApiBuffer();
 }
 
 public void OnConfigsExecuted()
@@ -55,9 +56,13 @@ public void OnConfigsExecuted()
 public Action CommandDiscordTest(int client, int args)
 {
   CPrintToChat(client, "{blue}[SurfTimer-Discord-BOT] {green}Sending map record test message.");
-  surftimer_OnNewRecord(client, 0, "00:30:36", "(-00:00:10)", 0);
+  surftimer_OnNewRecord(client, 0, "00:30:36", "(-00:00:10)", -1);
   CPrintToChat(client, "{blue}[SurfTimer-Discord-BOT] {green}Sending bonus record test message.");
-  surftimer_OnNewRecord(client, 1, "00:30:36", "(-00:00:10)", 0);
+  surftimer_OnNewRecord(client, 0, "00:30:36", "(-00:00:10)", 0);
+  CPrintToChat(client, "{blue}[SurfTimer-Discord-BOT] {green}Sending style bonus record test message.");
+  surftimer_OnNewRecord(client, 3, "00:30:36", "(-00:00:10)", 0);
+  CPrintToChat(client, "{blue}[SurfTimer-Discord-BOT] {green}Sending style map record test message.");
+  surftimer_OnNewRecord(client, 1, "00:30:36", "(-00:00:10)", -1);
   return Plugin_Handled;
 }
 
@@ -83,7 +88,7 @@ void sendRecordToApi(const char[] steamID64, int style, const char[] time, const
   char szRequestBuffer[1024];
   Format(szRequestBuffer, sizeof szRequestBuffer, "http://%s:%s/record", g_szApiHost, g_szApiPort);
   connection = new HTTPRequest(szRequestBuffer);
-  connection.Post(view_as<JSON>(data), onRecordSent);
+  connection.Post(view_as<JSON>(data), onPostSent);
 }
 
 stock bool IsValidClient(int iClient, bool bNoBots = true)
@@ -115,7 +120,7 @@ stock void RemoveWorkshop(char[] szMapName, int len)
 	ReplaceString(szMapName, len, szBuffer, "", true);
 }
 
-void onRecordSent(HTTPResponse response, int client)
+void onPostSent(HTTPResponse response, int client)
 {
 	if (response.Status != HTTPStatus_Created)
 	{
@@ -123,4 +128,14 @@ void onRecordSent(HTTPResponse response, int client)
 		return;
 	}
 	PrintToServer("(%s) - The API POST has been sent successfuly.", response.Status);
+}
+
+void ClearApiBuffer(){
+	PrintToServer("Sending POST to http://%s:%s/flush...", g_szApiHost, g_szApiPort);
+	JSONObject data = new JSONObject();
+  	data.SetString("apiKey", g_szApiKey);
+	char szRequestBuffer[1024];
+	Format(szRequestBuffer, sizeof szRequestBuffer, "http://%s:%s/flush", g_szApiHost, g_szApiPort);
+	connection = new HTTPRequest(szRequestBuffer);
+	connection.Post(view_as<JSON>(data), onPostSent);
 }
