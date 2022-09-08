@@ -34,12 +34,6 @@ api.post('/record', async (req, res) => {
 
   console.log(data.style != 0 ? 'styleTimer' : data.bonusGroup > -1 ? 'bonusTimer' : 'mainTimer');
 
-  // if (recordData.has(key)) {
-  //   console.log("LOG_BUFFER_OVERRIDE");
-  //   clearTimeout(data.style != 0 ? styleTimer : data.bonusGroup > -1 ? bonusTimer : mainTimer);
-  // } else {
-  //   findExistingBuffer(type, data.style != 0 ? styleTimer : data.bonusGroup > -1 ? bonusTimer : mainTimer)
-  // }
 
   recordData.set(key, data);
 
@@ -54,71 +48,24 @@ api.post('/record', async (req, res) => {
 });
 
 
-function onTimerFinished(type: recordType) {
+async function onTimerFinished(type: recordType) {
   console.log("LOG_RECORD_ANNOUNCE");
-  let exp: string = getRegexFromType(type);
 
-  recordData.forEach(async (value, key, _) => {
+  const channel = client.channels.cache.get(
+    process.env.MAP_RECORD_CHANNEL_ID,
+  ) as TextChannel;
 
-    if (!RegExp(exp).test(key)) {
-      return;
-    }
+  const exp: string = getRegexFromType(type);
+  const a = Array.from(recordData.keys()).filter((x) => RegExp(exp).test(x));
 
-    console.log("Announcing record %s", key);
+  var content = await generateImages(a);
 
-    let data = value;
-    const playerInfo = await steamWebApi.usersApi.getPlayerSummaries([
-      data.steamID64,
-    ]);
-
-    if (playerInfo.response.players.length === 0) {
-      console.log('ERROR_EMPTY_PLAYER_INFO')
-      return;
-    }
-
-    const player = playerInfo.response.players[0];
-
-    const channel = client.channels.cache.get(
-      process.env.MAP_RECORD_CHANNEL_ID,
-    ) as TextChannel;
-    const text = readFileSync(
-      './templates/map-record-default.html',
-      'utf8',
-    ).toString();
-
-    // Adding spaces here isn't the best solution, but works for the amount of effort it deserves to get.
-    const styles = ["", "Sideways ", "Half-Sideways ", "Backwards ", "Low-Gravity ", "Slow Motion ", "Fast Forward ", "Freestyle "];
-
-    // TODO: Specify which bonus has a new record. (e.g. Surf_Lost2 [Bonus 2])
-    nodeHtmlToImage({
-      html: text,
-      content: {
-        playerName: player.personaname,
-        style: styles[data.style],
-        mapType: data.bonusGroup == -1 ? "map" : "bonus",
-        mapName: `${data.mapName}`,
-        bonusGroup: `${data.bonusGroup > -1 ? " [BONUS " + data.bonusGroup + "]" : ''}`,
-        avatar: player.avatarfull,
-        newTime: data.newTime,
-        timeDiff: data.timeDiff,
-      },
-    }).then((image) => {
-
-      const attachment = new AttachmentBuilder(
-        image as BufferResolvable);
-
-      const content = {
-        files: [attachment],
-      };
-      channel.send(content);
-    });
-
-    recordData.delete(key);
-  })
+  if (content.files.length != 0) {
+    channel.send(content);
+  }
 }
 
 api.post('/flush', (req, res) => {
-
   console.log('LOG_FLUSH_REQUEST');
 
   // Might as well reuse existing interfaces
@@ -135,30 +82,16 @@ api.post('/flush', (req, res) => {
   if (recordData.size != 0) {
     // Send out all the new records
     onTimerFinished(recordType.ALL);
-  }
 
-  // Clear the map
-  recordData.clear();
+    // Clear the map
+    recordData.clear();
+  }
 
   // Send response depending on stuff
   console.log("HTTP_RETURN_201");
   return res.sendStatus(200);
 })
 
-// function findExistingBuffer(type: recordType, timer: NodeJS.Timeout) {
-//   let exp: string = getRegexFromType(type);
-
-//   if (type != recordType.NORMAL) {
-//     let keys = Array.from(recordData.keys());
-//     for (var i = 0; i < keys.length; i++) {
-//       if (RegExp(exp).test(keys[i])) {
-//         console.log("LOG_BUFFER_CLEAR_DUPLICATE_TIMER");
-//         clearTimeout(timer);
-//         break;
-//       }
-//     }
-//   }
-// }
 
 function getRegexFromType(type: recordType) {
   let exp: string = "";
@@ -178,4 +111,55 @@ function getRegexFromType(type: recordType) {
   }
 
   return exp;
+}
+
+async function generateImages(a: string[]) {
+  const text = readFileSync(
+    './templates/map-record-default.html',
+    'utf8',
+  ).toString();
+
+  const content = {
+    files: [],
+  };
+
+  // Adding spaces here isn't the best solution, but works for the amount of effort it deserves to get.
+  const styles = ["", "Sideways ", "Half-Sideways ", "Backwards ", "Low-Gravity ", "Slow Motion ", "Fast Forward ", "Freestyle "];
+
+  for (var i = 0; i < a.length; i++) {
+    const data = recordData.get(a[i]);
+    const playerInfo = await steamWebApi.usersApi.getPlayerSummaries([
+      data.steamID64,
+    ]);
+
+    if (playerInfo.response.players.length === 0) {
+      console.log('ERROR_EMPTY_PLAYER_INFO')
+      return content;
+    }
+
+    const player = playerInfo.response.players[0];
+
+    await nodeHtmlToImage({
+      html: text,
+      content: {
+        playerName: player.personaname,
+        style: styles[data.style],
+        mapType: data.bonusGroup == -1 ? "map" : "bonus",
+        mapName: `${data.mapName}`,
+        bonusGroup: `${data.bonusGroup > -1 ? " [BONUS " + data.bonusGroup + "]" : ''}`,
+        avatar: player.avatarfull,
+        newTime: data.newTime,
+        timeDiff: data.timeDiff,
+      },
+    }).then((image) => {
+      const attachment = new AttachmentBuilder(
+        image as BufferResolvable);
+
+      content.files = [attachment, ...content.files]
+    });
+
+    recordData.delete(a[i]);
+  }
+
+  return content;
 }

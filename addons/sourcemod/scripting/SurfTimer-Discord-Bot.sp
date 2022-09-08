@@ -42,6 +42,9 @@ public void OnMapStart()
 {
 	GetCurrentMap(g_szCurrentMap, sizeof g_szCurrentMap);
 	RemoveWorkshop(g_szCurrentMap, sizeof g_szCurrentMap);
+}
+
+public void OnMapEnd(){
 	ClearApiBuffer();
 }
 
@@ -58,9 +61,9 @@ public Action CommandDiscordTest(int client, int args)
   CPrintToChat(client, "{blue}[SurfTimer-Discord-BOT] {green}Sending map record test message.");
   surftimer_OnNewRecord(client, 0, "00:30:36", "(-00:00:10)", -1);
   CPrintToChat(client, "{blue}[SurfTimer-Discord-BOT] {green}Sending bonus record test message.");
-  surftimer_OnNewRecord(client, 0, "00:30:36", "(-00:00:10)", 0);
+  surftimer_OnNewRecord(client, 0, "00:30:36", "(-00:00:10)", 2);
   CPrintToChat(client, "{blue}[SurfTimer-Discord-BOT] {green}Sending style bonus record test message.");
-  surftimer_OnNewRecord(client, 3, "00:30:36", "(-00:00:10)", 0);
+  surftimer_OnNewRecord(client, 3, "00:30:36", "(-00:00:10)", 1);
   CPrintToChat(client, "{blue}[SurfTimer-Discord-BOT] {green}Sending style map record test message.");
   surftimer_OnNewRecord(client, 1, "00:30:36", "(-00:00:10)", -1);
   return Plugin_Handled;
