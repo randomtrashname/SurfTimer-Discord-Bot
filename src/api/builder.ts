@@ -29,13 +29,32 @@ api.post('/record', async (req, res) => {
     return res.sendStatus(403);
   }
 
+  console.log('LOG_PRISMA_CREATE_RECORD');
+  console.log(`INSERT INTO st_records(steamid64, map, runtime, style, bonusGroup) 
+    VALUES(${data.steamID64},${data.mapName}, ${moment(data.newTime, 'mm: ss: SS').diff(moment().startOf('day'), 'milliseconds') / 1000}, ${data.style}, ${data.bonusGroup})`);
+
+  await prisma.$executeRaw`
+    INSERT INTO st_records(steamid64, map, runtime, style, bonusGroup) 
+    VALUES (${data.steamID64},${data.mapName},${moment(data.newTime, 'mm:ss:SS').diff(moment().startOf('day'), 'milliseconds') / 1000},${data.style},${data.bonusGroup})`;
+
+  // const query = await prisma.st_records.create({
+  //   data: {
+  //     map: data.mapName,
+  //     steamid64: data.steamID64,
+  //     bonusGroup: data.bonusGroup,
+  //     runtime: parseFloat(moment(data.newTime, "mm:ss:SS").format("ss.SS")),
+  //     style: data.style,
+  //   }
+  // });
+
+
+
   let key = `${data.style}${data.bonusGroup}`;
   console.log("Recieved record %s from %s", key, data.steamID64);
   let type: recordType = data.style != 0 ? recordType.STYLE : data.bonusGroup > -1 ? recordType.BONUS : recordType.NORMAL;
   console.log("LOG_BUFFER_TYPE %s", recordType[type])
 
   console.log(data.style != 0 ? 'styleTimer' : data.bonusGroup > -1 ? 'bonusTimer' : 'mainTimer');
-
 
   recordData.set(key, data);
 
@@ -128,65 +147,21 @@ async function generateImages(a: string[]) {
       continue;
     }
 
-    let oldPlayer: PlayerSummary;
-    let newPlayer: PlayerSummary;
-    let oldTime: number;
-
-
-    // For some reason the history of bonus & style records isn't persisted in the db. 
-    // So for now I can only gather relevant data from the latestrecords table, which might not even contain the previous record (even if it was set beforehand).
-    // And to prevent false representations of new records I'm not going to make use of the playerrecords tab either 
-    // e.g. case of player beating his own record, but the previous record doesn't show up in the latestrecords table
-    // looking up the times in playerrecords with DESC is just pointless then.
-    // So i'll just have to create a new table + query to it from this discord bot :^)
-    if (a[i] == '0-1') {
-      console.log("GENERATE_IMAGES_NORMAL_RUN");
-      const previousRecord = await prisma.ck_latestrecords.findFirst({
-        orderBy: {
-          date: 'desc'
-        },
-        where:
-        {
-          map: data.mapName
-        },
-        skip: 1,
-        take: 1,
-        select: {
-          steamid: true,
-          runtime: true
-        }
-      })
-
-      if (previousRecord?.steamid != undefined) {
-        console.log("GENERATE_IMAGES_RECORD_FOUND - %d", previousRecord.runtime)
-        const oldSteam64 = await prisma.ck_playerrank.findFirst({
-          where: {
-            steamid: previousRecord.steamid
-          },
-          select: {
-            steamid64: true
-          }
-        })
-        const oldPlayerInfo = await steamWebApi.usersApi.getPlayerSummaries([
-          oldSteam64.steamid64,
-        ]);
-
-        oldPlayer = oldPlayerInfo.response.players[0];
-        oldTime = previousRecord.runtime;
-        console.log("GENERATE_IMAGES_FOUND_OLD_PLAYER - %s", oldPlayer.personaname);
-      }
-    }
+    console.log("GENERATE_IMAGES_FETCH_PREVIOUS_RECORD");
+    const oldPlayerInfo = await getPreviousRecordData(data);
+    const oldPlayer = oldPlayerInfo.player;
+    const oldTime = oldPlayerInfo.time;
 
     const newPlayerInfo = await steamWebApi.usersApi.getPlayerSummaries([
       data.steamID64,
     ]);
+
     if (newPlayerInfo.response.players.length === 0) {
       console.log('ERROR_EMPTY_PLAYER_INFO')
       return content;
     }
-    newPlayer = newPlayerInfo.response.players[0];
 
-
+    const newPlayer = newPlayerInfo.response.players[0];
 
     const text = oldPlayer == undefined ? readFileSync(
       './templates/map-record-default.html',
@@ -248,4 +223,82 @@ async function generateHtmlContent(newPlayer: PlayerSummary, data: MapRecordData
   }
 
   return x;
+}
+
+async function getPreviousRecordData(data: MapRecordData) {
+  let p: PlayerSummary, t: number;
+
+  // Search st_records for any previous record on given map.
+  const record = await prisma.st_records.findFirst({
+    orderBy: {
+      date: 'desc'
+    },
+    where: {
+      map: data.mapName,
+      style: data.style,
+      bonusGroup: data.bonusGroup
+    },
+    skip: 1,
+    take: 1,
+    select: {
+      bonusGroup: true,
+      map: true,
+      runtime: true,
+      steamid64: true,
+      style: true
+    }
+  })
+
+  if (record != undefined) {
+    const playerInfo = await steamWebApi.usersApi.getPlayerSummaries([
+      record.steamid64,
+    ]);
+
+    p = playerInfo.response.players[0];
+    t = record.runtime;
+    console.log("GET_PREVIOUS_RECORD_DATA_PLAYER - %s", p.personaname);
+  }
+  else if (data.style == 0 && data.bonusGroup == -1) {
+    // Search ck_latestrecords for any previous record on given map.
+    const ck_record = await prisma.ck_latestrecords.findFirst({
+      orderBy: {
+        date: 'desc'
+      },
+      where:
+      {
+        map: data.mapName
+      },
+      skip: 1,
+      take: 1,
+      select: {
+        steamid: true,
+        runtime: true
+      }
+    })
+
+    if (ck_record?.steamid != undefined) {
+      console.log("GET_PREVIOUS_RECORD_DATA_TIME - %d", ck_record.runtime)
+      const player = await prisma.ck_playerrank.findFirst({
+        where: {
+          steamid: ck_record.steamid
+        },
+        select: {
+          steamid64: true
+        }
+      })
+
+      const playerInfo = await steamWebApi.usersApi.getPlayerSummaries([
+        player.steamid64,
+      ]);
+
+      p = playerInfo.response.players[0];
+      t = ck_record.runtime;
+      console.log("GET_PREVIOUS_RECORD_DATA_PLAYER - %s", p.personaname);
+    }
+  }
+
+  return {
+    player: p,
+    time: t,
+  };
 }

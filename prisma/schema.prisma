@@ -269,3 +269,14 @@ model ck_zones {
 
   @@id([mapname, zoneid])
 }
+
+model st_records {
+  steamid64   String   @db.VarChar(32)
+  map         String   @db.VarChar(32)
+  runtime     Float    @default(-1) @db.Float
+  style       Int      @default(0)
+  bonusGroup  Int      @default(1)
+  date        DateTime @default(now()) @db.Timestamp(0)
+
+  @@id([steamid64, map, date])
+}
