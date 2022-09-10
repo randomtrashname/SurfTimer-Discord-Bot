@@ -1,0 +1,170 @@
+<html>
+
+<head>
+  <link href="http://fonts.cdnfonts.com/css/oxidesolidweb-boldw03-rg" rel="stylesheet" />
+
+  <style>
+    @import url('http://fonts.cdnfonts.com/css/oxidesolidweb-boldw03-rg');
+
+    body {
+      width: 1720px;
+      height: 720px;
+      margin: 0;
+      padding: 0;
+      background-image: url('https://github.com/Sayt123/SurfMapPics/blob/Maps-and-bonuses/csgo/{{ mapName }}.jpg?raw=true');
+      background-repeat: no-repeat;
+      background-size: 1720px 720px;
+      backdrop-filter: blur(5px);
+    }
+
+    table {
+      vertical-align: middle;
+      align-content: center;
+      text-align: center;
+    }
+
+    #player {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #player img {
+      margin: auto;
+      border-radius: 50%;
+      width: 300px;
+      height: 300px;
+    }
+
+    #player td {
+      justify-content: center;
+    }
+
+    .previous {
+      border: 0.5rem solid red;
+    }
+
+    .current {
+      border: 0.5rem solid green;
+    }
+
+    #player span {
+      color: white;
+      font-size: clamp(1rem, 4rem, 5rem);
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      -webkit-text-stroke: 2px black;
+    }
+
+    #announcement {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      margin-bottom: 0;
+    }
+
+    #announcement #type {
+      margin-top: 0.5rem;
+      color: white;
+      font-size: 5rem;
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      margin-bottom: 0;
+      -webkit-text-stroke: 2px black;
+    }
+
+    #announcement #mapname {
+      margin-top: 0.5rem;
+      color: white;
+      font-size: 5rem;
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      margin-bottom: 0;
+      -webkit-text-stroke: 2px black;
+    }
+
+    #times {
+      flex-direction: row;
+      margin-top: 3rem;
+      margin-bottom: 0;
+      text-align: center;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-left: 20%;
+      margin-right: 20%;
+    }
+
+    #times #new-time {
+      color: white;
+      font-size: clamp(.75rem, 3.75rem, 4.5rem);
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      margin-bottom: 0;
+      margin-top: 0;
+      -webkit-text-stroke: 2px black;
+    }
+
+    #time-diff {
+      color: green !important;
+      font-size: clamp(1rem, 4rem, 5rem);
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      margin-bottom: 0;
+      margin-top: 0;
+      -webkit-text-stroke: 2px black;
+      text-align: center;
+      align-self: center;
+    }
+
+    #arrow {
+      color: white;
+      font-size: 8rem !important;
+      font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
+      margin-bottom: 0;
+      margin-top: 0;
+      -webkit-text-stroke: 2px black;
+    }
+
+    .w1 {
+      width: 10%;
+    }
+
+    .w4 {
+      width: 314px;
+      width: 40%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="announcement">
+    <p id="type">New {{ style }}{{ mapType }} record!</p>
+    <p id="type">{{ mapName }}{{ bonusGroup }}</p>
+  </div>
+
+  <div id="player">
+    <table>
+      <tr>
+        <td class="w4" style="width:314px"><img class="previous" src="{{ oldAvatar }}" /></th>
+        <td class="w1">
+          <span id="arrow">&#10140;</span>
+          <span id="time-diff">{{ timeDiff }}</span>
+
+        </td>
+        <td class="w4" style="width:314px"><img class="current" src="{{ newAvatar }}" /></th>
+      </tr>
+      <tr class="caption">
+        <td class="w4"><span>{{ oldPlayerName }}</span></td>
+        <td class="w1"></td>
+        <td class="w4"><span>{{ newPlayerName }}</span></td>
+      </tr>
+      <tr id="times">
+        <td class="w4">
+          <span id="new-time">{{ oldTime }}</span>
+        </td>
+        <td class="w1"></td>
+        <td class="w4">
+          <span id="new-time">{{ newTime }}</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+
+</html>
