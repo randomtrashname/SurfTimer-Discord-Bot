@@ -51,9 +51,16 @@
 
     #player span {
       color: white;
-      font-size: clamp(1rem, 4rem, 5rem);
+      font-size: clamp(1vw, 3vw, 5vw);
       font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
       -webkit-text-stroke: 2px black;
+    }
+
+    #playername {
+      text-overflow: ellipsis;
+      width: 700px;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     #announcement {
@@ -103,7 +110,7 @@
 
     #time-diff {
       color: green !important;
-      font-size: clamp(1rem, 4rem, 5rem);
+      font-size: clamp(1vw, 3vw, 5vw);
       font-family: 'OxideSolidWeb-BoldW03-Rg', sans-serif;
       margin-bottom: 0;
       margin-top: 0;
@@ -121,13 +128,17 @@
       -webkit-text-stroke: 2px black;
     }
 
-    .w1 {
-      width: 10%;
+    #players {
+      text-align: center;
+      display: flex;
+      justify-content: center;
     }
 
-    .w4 {
-      width: 314px;
-      width: 40%;
+    #arrow-time-diff {
+      margin-top: 33px;
+      display: flex;
+      flex-direction: column;
+      text-align: center;
     }
   </style>
 </head>
@@ -137,33 +148,21 @@
     <p id="type">New {{ style }}{{ mapType }} record!</p>
     <p id="type">{{ mapName }}{{ bonusGroup }}</p>
   </div>
-
-  <div id="player">
-    <table>
-      <tr>
-        <td class="w4" style="width:314px"><img class="previous" src="{{ oldAvatar }}" /></th>
-        <td class="w1">
-          <span id="arrow">&#10140;</span>
-          <span id="time-diff">{{ timeDiff }}</span>
-
-        </td>
-        <td class="w4" style="width:314px"><img class="current" src="{{ newAvatar }}" /></th>
-      </tr>
-      <tr class="caption">
-        <td class="w4"><span>{{ oldPlayerName }}</span></td>
-        <td class="w1"></td>
-        <td class="w4"><span>{{ newPlayerName }}</span></td>
-      </tr>
-      <tr id="times">
-        <td class="w4">
-          <span id="new-time">{{ oldTime }}</span>
-        </td>
-        <td class="w1"></td>
-        <td class="w4">
-          <span id="new-time">{{ newTime }}</span>
-        </td>
-      </tr>
-    </table>
+  <div id="players">
+    <div id="player">
+      <img class="previous" src="{{ oldAvatar }}" />
+      <span id="playername">{{ oldPlayerName }}</span>
+      <span id="new-time">{{ oldTime }}</span>
+    </div>
+    <div id="arrow-time-diff">
+      <span id="arrow">&#10140;</span>
+      <span id="time-diff">{{ timeDiff }}</span>
+    </div>
+    <div id="player">
+      <img class="current" src="{{ newAvatar }}" />
+      <span id="playername">{{ newPlayerName }}</span>
+      <span id="new-time">{{ newTime }}</span>
+    </div>
   </div>
 </body>
 
