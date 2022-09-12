@@ -30,9 +30,6 @@ api.post('/record', async (req, res) => {
   }
 
   console.log('LOG_PRISMA_CREATE_RECORD');
-  console.log(`INSERT INTO st_records(steamid64, map, runtime, style, bonusGroup) 
-    VALUES(${data.steamID64},${data.mapName}, ${moment(data.newTime, 'mm: ss: SS').diff(moment().startOf('day'), 'milliseconds') / 1000}, ${data.style}, ${data.bonusGroup})`);
-
   await prisma.$executeRaw`
     INSERT INTO st_records(steamid64, map, runtime, style, bonusGroup) 
     VALUES (${data.steamID64},${data.mapName},${moment(data.newTime, 'mm:ss:SS').diff(moment().startOf('day'), 'milliseconds') / 1000},${data.style},${data.bonusGroup})`;
@@ -41,9 +38,6 @@ api.post('/record', async (req, res) => {
   console.log("Recieved record %s from %s", key, data.steamID64);
   let type: recordType = data.style != 0 ? recordType.STYLE : data.bonusGroup > -1 ? recordType.BONUS : recordType.NORMAL;
   console.log("LOG_BUFFER_TYPE %s", recordType[type])
-
-  console.log(data.style != 0 ? 'styleTimer' : data.bonusGroup > -1 ? 'bonusTimer' : 'mainTimer');
-
   recordData.set(key, data);
 
   console.log("LOG_BUFFER_INSERT");
