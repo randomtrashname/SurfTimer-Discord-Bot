@@ -37,18 +37,6 @@ api.post('/record', async (req, res) => {
     INSERT INTO st_records(steamid64, map, runtime, style, bonusGroup) 
     VALUES (${data.steamID64},${data.mapName},${moment(data.newTime, 'mm:ss:SS').diff(moment().startOf('day'), 'milliseconds') / 1000},${data.style},${data.bonusGroup})`;
 
-  // const query = await prisma.st_records.create({
-  //   data: {
-  //     map: data.mapName,
-  //     steamid64: data.steamID64,
-  //     bonusGroup: data.bonusGroup,
-  //     runtime: parseFloat(moment(data.newTime, "mm:ss:SS").format("ss.SS")),
-  //     style: data.style,
-  //   }
-  // });
-
-
-
   let key = `${data.style}${data.bonusGroup}`;
   console.log("Recieved record %s from %s", key, data.steamID64);
   let type: recordType = data.style != 0 ? recordType.STYLE : data.bonusGroup > -1 ? recordType.BONUS : recordType.NORMAL;
