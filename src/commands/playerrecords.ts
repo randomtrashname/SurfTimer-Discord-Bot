@@ -55,7 +55,7 @@ async function cmdCallback(
         }
     })
 
-    const res1 = await prisma.$queryRaw<ck_playertimes[]>`SELECT mapname FROM ck_playertimes a WHERE runtimepro = (SELECT MIN(runtimepro) FROM ck_playertimes b WHERE a.mapname = b.mapname) AND steamid=${x.steamid} AND style=0`
+    const res1 = await prisma.$queryRaw<ck_playertimes[]>`SELECT mapname FROM ck_playertimes a WHERE runtimepro = (SELECT MIN(runtimepro) FROM ck_playertimes b WHERE a.mapname = b.mapname AND style=0) AND steamid=${x.steamid}`
     if (!res1 || res1.length == 0) {
         return `${player.personaname} has no records.`;
     }
