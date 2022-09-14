@@ -50,7 +50,7 @@ export async function convertToSteam64(
     },
   });
   if (res !== undefined && res !== null) {
-    console.log(res)
+    // console.log(res)
     return res.steamid64;
   }
   return undefined;

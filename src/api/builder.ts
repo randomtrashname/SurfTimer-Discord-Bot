@@ -29,30 +29,30 @@ api.post('/record', async (req, res) => {
     return res.sendStatus(403);
   }
 
-  console.log('LOG_PRISMA_CREATE_RECORD');
+  // console.log('LOG_PRISMA_CREATE_RECORD');
   await prisma.$executeRaw`
     INSERT INTO st_records(steamid64, map, runtime, style, bonusGroup) 
     VALUES (${data.steamID64},${data.mapName},${moment(data.newTime, 'mm:ss:SS').diff(moment().startOf('day'), 'milliseconds') / 1000},${data.style},${data.bonusGroup})`;
 
   let key = `${data.style}${data.bonusGroup}`;
-  console.log("Recieved record %s from %s", key, data.steamID64);
+  // console.log("Recieved record %s from %s", key, data.steamID64);
   let type: recordType = data.style != 0 ? recordType.STYLE : data.bonusGroup > -1 ? recordType.BONUS : recordType.NORMAL;
-  console.log("LOG_BUFFER_TYPE %s", recordType[type])
+  // console.log("LOG_BUFFER_TYPE %s", recordType[type])
   recordData.set(key, data);
 
-  console.log("LOG_BUFFER_INSERT");
+  // console.log("LOG_BUFFER_INSERT");
   clearTimeout(timers[type]);
   timers[type] = setTimeout(() => {
     onTimerFinished(type);
   }, parseInt(process.env.BUFFER_TIME) * 1000)
 
-  console.log("HTTP_RETURN_201")
+  // console.log("HTTP_RETURN_201")
   return res.sendStatus(201);
 });
 
 
 async function onTimerFinished(type: recordType) {
-  console.log("LOG_RECORD_ANNOUNCE");
+  // console.log("LOG_RECORD_ANNOUNCE");
 
   const channel = client.channels.cache.get(
     process.env.MAP_RECORD_CHANNEL_ID,
@@ -69,7 +69,7 @@ async function onTimerFinished(type: recordType) {
 }
 
 api.post('/flush', (req, res) => {
-  console.log('LOG_FLUSH_REQUEST');
+  // console.log('LOG_FLUSH_REQUEST');
 
   // Might as well reuse existing interfaces
   const data = req.body as MapRecordData;
@@ -91,7 +91,7 @@ api.post('/flush', (req, res) => {
   }
 
   // Send response depending on stuff
-  console.log("HTTP_RETURN_201");
+  // console.log("HTTP_RETURN_201");
   return res.sendStatus(200);
 })
 
@@ -129,7 +129,7 @@ async function generateImages(a: string[]) {
       continue;
     }
 
-    console.log("GENERATE_IMAGES_FETCH_PREVIOUS_RECORD");
+    // console.log("GENERATE_IMAGES_FETCH_PREVIOUS_RECORD");
     const oldPlayerInfo = await getPreviousRecordData(data);
     const oldPlayer = oldPlayerInfo.player;
     const oldTime = oldPlayerInfo.time;
@@ -175,7 +175,7 @@ async function generateHtmlContent(newPlayer: PlayerSummary, data: MapRecordData
   let x;
 
   if (oldPlayer == undefined) {
-    console.log("GENERATE_HTML_UNDEFINDED_OLD_PLAYER")
+    // console.log("GENERATE_HTML_UNDEFINDED_OLD_PLAYER")
     x = {
       playerName: newPlayer.personaname,
       style: styles[data.style],
@@ -188,7 +188,7 @@ async function generateHtmlContent(newPlayer: PlayerSummary, data: MapRecordData
     };
   } else {
     let t = moment().startOf('day').add(oldTime, 'seconds').format('mm:ss:SS').toString();
-    console.log("GENERATE_HTML_FOUND_OLD_PLAYER - %s - %d", oldPlayer.personaname, oldTime);
+    // console.log("GENERATE_HTML_FOUND_OLD_PLAYER - %s - %d", oldPlayer.personaname, oldTime);
     x = {
       oldPlayerName: oldPlayer.personaname,
       newPlayerName: newPlayer.personaname,
@@ -238,7 +238,7 @@ async function getPreviousRecordData(data: MapRecordData) {
 
     p = playerInfo.response.players[0];
     t = record.runtime;
-    console.log("GET_PREVIOUS_RECORD_DATA_PLAYER - %s", p.personaname);
+    // console.log("GET_PREVIOUS_RECORD_DATA_PLAYER - %s", p.personaname);
   }
   else if (data.style == 0 && data.bonusGroup == -1) {
     // Search ck_latestrecords for any previous record on given map.
@@ -259,7 +259,7 @@ async function getPreviousRecordData(data: MapRecordData) {
     })
 
     if (ck_record?.steamid != undefined) {
-      console.log("GET_PREVIOUS_RECORD_DATA_TIME - %d", ck_record.runtime)
+      // console.log("GET_PREVIOUS_RECORD_DATA_TIME - %d", ck_record.runtime)
       const player = await prisma.ck_playerrank.findFirst({
         where: {
           steamid: ck_record.steamid
@@ -275,7 +275,7 @@ async function getPreviousRecordData(data: MapRecordData) {
 
       p = playerInfo.response.players[0];
       t = ck_record.runtime;
-      console.log("GET_PREVIOUS_RECORD_DATA_PLAYER - %s", p.personaname);
+      // console.log("GET_PREVIOUS_RECORD_DATA_PLAYER - %s", p.personaname);
     }
   }
 
