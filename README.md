@@ -1,5 +1,7 @@
 ﻿# SurfTimer-Discord-Bot
 
+_A fork of [Sayt123's Surftimer-Discord-Bot](https://github.com/Sayt123/SurfTimer-Discord-Bot) which I've deployed on an AWS EC2 instance._ 
+
 A Discord bot for the Sourcemod [Surftimer](https://github.com/surftimer/Surftimer-Official) plugin.
 
 This bot provides basic commands such as `/playerstats <playerid>`, `/mapstats <mapname>` and `/top`.
@@ -18,19 +20,33 @@ It uses the [discord.js](https://discord.js.org/#/) library and the [prisma ORM]
 
 ![Top Command](https://github.com/Sarrus1/SurfTimer-Discord-Bot/blob/main/examples/top.PNG?raw=true)
 
+### Recordtop Command
+
+![Recordtop Command](https://github.com/randomtrashname/SurfTimer-Discord-Bot/blob/main/examples/recordtop.PNG?raw=true)
+
+### Playerrecords Command
+
+![Playerrecords Command](https://github.com/randomtrashname/SurfTimer-Discord-Bot/blob/main/examples/playerrecords.PNG?raw=true)
+
 ### Mapstats Command
 
 ![Mapstats Command](https://raw.githubusercontent.com/Sarrus1/SurfTimer-Discord-Bot/main/examples/mapstats.PNG)
 
 ### Image generator
 
+If there's no previous record on a map:
 ![Image generator](https://github.com/Sarrus1/SurfTimer-Discord-Bot/blob/main/examples/test.PNG?raw=true)
+
+Once a record has been beaten:
+![Image generator 2](https://github.com/randomtrashname/SurfTimer-Discord-Bot/blob/main/examples/record.PNG?raw=true)
 
 ## Credits
 
 - A huge thanks to [Sayt123](https://github.com/Sayt123) for their collection of surf map images, without which this bot would not look nearly as good!
 
 ## How to use it
+
+Using this fork requires you to run the [st_records.sql](https://raw.githubusercontent.com/randomtrashname/SurfTimer-Discord-Bot/main/sql/st_records.sql) script on your database. This is because I encountered issues with retrieving the map records, as some older records just seemed to vanish from the database(?) whilst working on the 'record-replace' image, amongst other issues. (fixing symptoms instead of the root cause :D)
 
 ### Using Docker (recommended)
 
@@ -61,6 +77,8 @@ It uses the [discord.js](https://discord.js.org/#/) library and the [prisma ORM]
 3. In this config file, set your hostname, the port of the API (3000 by default) and the API key you've configured in the previous steps (in your .env file).
 4. Reload the plugin and make sure everything is working with the command `!ck_discord_bot_test`.
 
+**`!ck_discord_bot_test` records will be saved in the database.** (in the `st_record` table, make sure you delete those when you're done testing.)
+
 ## Tech Stack
 
 This project uses [TypeScript](https://www.typescriptlang.org/), [Axios](https://axios-http.com/), and the [Prisma ORM](https://www.prisma.io/). It takes advantage of [Discord.js](https://discord.js.org/#/) to interact with the Discord API.
@@ -83,4 +101,4 @@ You SHOULD use [Visual Studio Code](https://code.visualstudio.com/) to work on t
 
 ### Adding commands
 
-The only thing contributors can do is to add new commands (if you have anything in mind, feel free to PR of course). To do so, all you have to do is create a file in the `commands` folder and adapt the code from another command such as `top.ts`.
+~~The only thing contributors can do is to add new commands (if you have anything in mind, feel free to PR of course).~~ To do so, all you have to do is create a file in the `commands` folder and adapt the code from another command such as `top.ts`.

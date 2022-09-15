@@ -28,6 +28,7 @@ export default {
     },
 };
 
+// TODO: Replace with st_records lookup, seems like the wrs column doesn't update properly. 
 async function cmdCallback(): Promise<WebhookMessageOptions | string> {
     const res1 = await prisma.ck_playerrank.findMany({
         orderBy: {

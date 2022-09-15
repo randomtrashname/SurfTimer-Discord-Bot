@@ -16,5 +16,5 @@ API_KEY=fGREZ78R98-fGREZ78R98-fGREZ78R98-fGREZ78R98-fGREZ78R98
 PORT=3000
 # Display countries + flags of users. (Accepts 'True', 'true', 't' and '1' as the 'enabled' input)
 PLAYER_FLAGS=true
-# Amount of time, in seconds, that the buffer keep records before announcing/replacing them. Set the value to 0 to disable.
+# Amount of time, in seconds, that the buffer keep records before announcing/replacing them. Set the value to 0 to "disable".
 BUFFER_TIME=300
