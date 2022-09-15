@@ -22,11 +22,11 @@ It uses the [discord.js](https://discord.js.org/#/) library and the [prisma ORM]
 
 ### Recordtop Command
 
-![Recordtop Command](https://github.com/randomtrashname/SurfTimer-Discord-Bot/blob/main/examples/recordtop.PNG?raw=true)
+![Recordtop Command](https://raw.githubusercontent.com/randomtrashname/SurfTimer-Discord-Bot/main/examples/recordtop.png)
 
 ### Playerrecords Command
 
-![Playerrecords Command](https://github.com/randomtrashname/SurfTimer-Discord-Bot/blob/main/examples/playerrecords.PNG?raw=true)
+![Playerrecords Command](https://raw.githubusercontent.com/randomtrashname/SurfTimer-Discord-Bot/main/examples/playerrecords.png)
 
 ### Mapstats Command
 
@@ -38,7 +38,7 @@ If there's no previous record on a map:
 ![Image generator](https://github.com/Sarrus1/SurfTimer-Discord-Bot/blob/main/examples/test.PNG?raw=true)
 
 Once a record has been beaten:
-![Image generator 2](https://github.com/randomtrashname/SurfTimer-Discord-Bot/blob/main/examples/record.PNG?raw=true)
+![Image generator 2](https://raw.githubusercontent.com/randomtrashname/SurfTimer-Discord-Bot/main/examples/record.png)
 
 ## Credits
 
