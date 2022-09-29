@@ -30,9 +30,11 @@ api.post('/record', async (req, res) => {
   }
 
   // console.log('LOG_PRISMA_CREATE_RECORD');
+  const timeFormat = data.newTime.length > 8 ? "H:mm:ss:SS" : "mm:ss:SS";
+
   await prisma.$executeRaw`
     INSERT INTO st_records(steamid64, map, runtime, style, bonusGroup) 
-    VALUES (${data.steamID64},${data.mapName},${moment(data.newTime, 'mm:ss:SS').diff(moment().startOf('day'), 'milliseconds') / 1000},${data.style},${data.bonusGroup})`;
+    VALUES (${data.steamID64},${data.mapName},${moment(data.newTime, timeFormat).diff(moment().startOf('day'), 'milliseconds') / 1000},${data.style},${data.bonusGroup})`;
 
   let key = `${data.style}${data.bonusGroup}`;
   // console.log("Recieved record %s from %s", key, data.steamID64);
